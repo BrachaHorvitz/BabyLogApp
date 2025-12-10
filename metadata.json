@@ -1,0 +1,5 @@
+{
+  "name": "BabyLog",
+  "description": "A dark-mode, one-handed tracking app for new parents to log nursing, bottle feeding, pumping, and diaper changes. Includes AI insights.",
+  "requestFramePermissions": []
+}
