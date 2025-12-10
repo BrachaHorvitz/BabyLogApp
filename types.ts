@@ -1,8 +1,10 @@
+
 export enum LogType {
   NURSING = 'NURSING',
   BOTTLE = 'BOTTLE',
   PUMP = 'PUMP',
   DIAPER = 'DIAPER',
+  SLEEP = 'SLEEP',
 }
 
 export enum BottleSubType {

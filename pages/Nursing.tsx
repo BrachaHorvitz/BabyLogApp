@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { RotateCcw, Pause, Play } from 'lucide-react';
+import { RotateCcw, Pause, Play, Timer } from 'lucide-react';
 import { Button, ScreenHeader } from '../components/UI';
 import { LogType, Side } from '../types';
 import { saveLog, getLastNursingSide } from '../services/storage';
@@ -74,51 +75,53 @@ const Nursing: React.FC = () => {
         )}
       </ScreenHeader>
 
-      {/* Hero Timer */}
-      <div className="flex justify-center py-6">
-        <div className="relative">
-             <div className="text-7xl font-mono font-bold text-slate-100 tracking-tighter tabular-nums">
+      {/* Main Session Card - cohesive grouping */}
+      <div className="bg-slate-900 rounded-[32px] p-2 shadow-xl ring-1 ring-white/5 flex flex-col gap-4">
+        
+        {/* Total Timer Display */}
+        <div className="flex flex-col items-center justify-center pt-8 pb-4">
+             <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">
+                <Timer className="w-3 h-3" /> {t('session_timer')}
+             </div>
+             <div className="text-7xl font-mono font-bold text-slate-100 tracking-tighter tabular-nums leading-none">
                 {formatTime(leftSeconds + rightSeconds)}
             </div>
-            {activeSide && (
-                <div className="absolute -bottom-6 left-0 right-0 text-center">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-bold animate-pulse">
-                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-                        {t('active')}
-                    </span>
-                </div>
-            )}
+             <div className={`mt-4 px-3 py-1 rounded-full text-xs font-bold transition-all ${activeSide ? 'bg-indigo-500/20 text-indigo-400' : 'bg-transparent text-transparent'}`}>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+                    {t('active')}
+                  </span>
+             </div>
         </div>
-      </div>
 
-      {/* Big Toggle Pads */}
-      <div className="grid grid-cols-2 gap-4 flex-1">
-        <button 
-          onClick={() => toggleSide('LEFT')}
-          className={`relative rounded-[32px] p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 min-h-[200px] ${
-            activeSide === 'LEFT' 
-            ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-900/40 scale-[1.02]' 
-            : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
-          }`}
-        >
-          <div className="text-4xl font-bold">{t('left_initial')}</div>
-          <div className="font-mono text-lg opacity-80">{formatTime(leftSeconds)}</div>
-          {/* Changed 'right-4' to 'end-4' which automatically handles RTL flipping */}
-          {activeSide === 'LEFT' ? <Pause className="absolute top-4 end-4 w-5 h-5" /> : <Play className="absolute top-4 end-4 w-5 h-5 opacity-50" />}
-        </button>
+        {/* Control Pads */}
+        <div className="grid grid-cols-2 gap-2">
+            <button 
+            onClick={() => toggleSide('LEFT')}
+            className={`relative rounded-[24px] p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 h-40 ${
+                activeSide === 'LEFT' 
+                ? 'bg-indigo-600 text-white shadow-lg' 
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
+            }`}
+            >
+            <div className="text-3xl font-bold">{t('left_initial')}</div>
+            <div className="font-mono text-base opacity-80">{formatTime(leftSeconds)}</div>
+            {activeSide === 'LEFT' ? <Pause className="absolute top-4 end-4 w-5 h-5" /> : <Play className="absolute top-4 end-4 w-5 h-5 opacity-50" />}
+            </button>
 
-        <button 
-          onClick={() => toggleSide('RIGHT')}
-          className={`relative rounded-[32px] p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 min-h-[200px] ${
-            activeSide === 'RIGHT' 
-            ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-900/40 scale-[1.02]' 
-            : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
-          }`}
-        >
-          <div className="text-4xl font-bold">{t('right_initial')}</div>
-          <div className="font-mono text-lg opacity-80">{formatTime(rightSeconds)}</div>
-          {activeSide === 'RIGHT' ? <Pause className="absolute top-4 end-4 w-5 h-5" /> : <Play className="absolute top-4 end-4 w-5 h-5 opacity-50" />}
-        </button>
+            <button 
+            onClick={() => toggleSide('RIGHT')}
+            className={`relative rounded-[24px] p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 h-40 ${
+                activeSide === 'RIGHT' 
+                ? 'bg-indigo-600 text-white shadow-lg' 
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
+            }`}
+            >
+            <div className="text-3xl font-bold">{t('right_initial')}</div>
+            <div className="font-mono text-base opacity-80">{formatTime(rightSeconds)}</div>
+            {activeSide === 'RIGHT' ? <Pause className="absolute top-4 end-4 w-5 h-5" /> : <Play className="absolute top-4 end-4 w-5 h-5 opacity-50" />}
+            </button>
+        </div>
       </div>
 
       {/* Footer Controls */}

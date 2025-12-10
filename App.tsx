@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { Milk, Baby, ClipboardList, Layers, Home as HomeIcon } from 'lucide-react';
@@ -7,6 +8,7 @@ import Nursing from './pages/Nursing';
 import Bottle from './pages/Bottle';
 import Pumping from './pages/Pumping';
 import Diaper from './pages/Diaper';
+import Sleep from './pages/Sleep';
 import History from './pages/History';
 import Assistant from './pages/Assistant';
 import { getDir, t } from './services/localization';
@@ -84,6 +86,7 @@ const App: React.FC = () => {
                 <Route path="/bottle" element={<Bottle />} />
                 <Route path="/pump" element={<Pumping />} />
                 <Route path="/diaper" element={<Diaper />} />
+                <Route path="/sleep" element={<Sleep />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/ai" element={<Assistant />} />
             </Routes>

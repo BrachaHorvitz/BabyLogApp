@@ -1,3 +1,4 @@
+
 import { getLanguage } from './storage';
 
 export type Lang = 'en' | 'he';
@@ -23,8 +24,10 @@ const dictionaries = {
     'nav_history': 'History',
 
     // Home
-    'last_feed': 'Last Feed',
-    'no_logs': 'No feeding logs yet.',
+    'last_feed': 'Feed',
+    'last_diaper': 'Diaper',
+    'last_sleep': 'Sleep',
+    'no_logs': 'No data',
     'overdue': 'Overdue by',
     'next': 'Next',
     'goal': 'GOAL',
@@ -49,13 +52,16 @@ const dictionaries = {
     'right_initial': 'R',
     'left': 'Left',
     'right': 'Right',
+    'session_timer': 'Session Timer',
 
     // Bottle
     'bottle_title': 'Bottle Feed',
     'formula': 'Formula',
     'breast_milk': 'Breast Milk',
     'ml': 'mL',
+    'oz': 'oz',
     'save_log': 'Save Log',
+    'quick_add': 'Quick Add',
 
     // Pump
     'pump_title': 'Pumping',
@@ -70,6 +76,14 @@ const dictionaries = {
     'dirty_desc': 'Poop',
     'both_desc': 'The works',
     'diaper_notes': 'Notes (texture, color)...',
+    
+    // Sleep
+    'sleep_title': 'Sleep',
+    'sleep_log': 'Log Sleep',
+    'fell_asleep': 'Fell Asleep',
+    'woke_up': 'Woke Up',
+    'duration': 'Duration',
+    'invalid_duration': 'End time must be after start time.',
 
     // History
     'history_title': 'History',
@@ -114,8 +128,10 @@ const dictionaries = {
     'nav_history': 'היסטוריה',
 
     // Home
-    'last_feed': 'האכלה אחרונה',
-    'no_logs': 'אין נתונים עדיין',
+    'last_feed': 'האכלה',
+    'last_diaper': 'חיתול',
+    'last_sleep': 'שינה',
+    'no_logs': 'אין נתונים',
     'overdue': 'איחור של',
     'next': 'הבא',
     'goal': 'יעד',
@@ -140,13 +156,16 @@ const dictionaries = {
     'right_initial': 'ימין',
     'left': 'שמאל',
     'right': 'ימין',
+    'session_timer': 'שעון סשן',
 
     // Bottle
     'bottle_title': 'האכלה מבקבוק',
     'formula': 'תמ״ל',
     'breast_milk': 'חלב אם',
     'ml': 'מ״ל',
+    'oz': 'אונקיות',
     'save_log': 'שמור רישום',
+    'quick_add': 'הוספה מהירה',
 
     // Pump
     'pump_title': 'שאיבה',
@@ -161,6 +180,14 @@ const dictionaries = {
     'dirty_desc': 'קקי',
     'both_desc': 'הכל כלול',
     'diaper_notes': 'הערות (מרקם, צבע)...',
+
+    // Sleep
+    'sleep_title': 'שינה',
+    'sleep_log': 'רישום שינה',
+    'fell_asleep': 'נרדם ב',
+    'woke_up': 'התעורר ב',
+    'duration': 'משך',
+    'invalid_duration': 'זמן סיום חייב להיות אחרי זמן התחלה.',
 
     // History
     'history_title': 'היסטוריה',

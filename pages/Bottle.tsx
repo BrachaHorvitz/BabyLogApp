@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Milk, Droplets, Clock } from 'lucide-react';
+import { Milk, Droplets, Clock, Plus } from 'lucide-react';
 import { Button, Card, ScreenHeader } from '../components/UI';
 import { LogType, BottleSubType } from '../types';
 import { saveLog } from '../services/storage';
@@ -73,7 +74,7 @@ const Bottle: React.FC = () => {
           </button>
         </div>
 
-        {/* Amount Display */}
+        {/* Amount Display with Contrast Fix */}
         <div className="flex flex-col items-center gap-2">
             <div className="relative">
                 <input
@@ -81,7 +82,7 @@ const Bottle: React.FC = () => {
                 inputMode="numeric"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="bg-transparent text-slate-100 text-7xl font-mono font-bold text-center w-48 outline-none placeholder:text-slate-800 transition-all focus:scale-110"
+                className="bg-transparent text-slate-100 text-7xl font-mono font-bold text-center w-48 outline-none placeholder:text-slate-600 transition-all focus:scale-110"
                 placeholder="0"
                 />
             </div>
@@ -90,15 +91,26 @@ const Bottle: React.FC = () => {
             </span>
         </div>
         
-        {/* Quick Add Buttons */}
-        <div className="grid grid-cols-4 gap-3 w-full">
+        {/* Quick Add Buttons - Redesigned to match Diaper style */}
+        <div className="grid grid-cols-2 gap-3 w-full">
           {[30, 60, 90, 120].map(val => (
             <button 
               key={val}
               onClick={() => setAmount(val.toString())}
-              className="bg-slate-800 active:bg-slate-700 text-slate-300 py-3 rounded-xl text-sm font-bold transition-colors"
+              className="bg-slate-800 active:bg-slate-700 hover:bg-slate-750 p-4 rounded-2xl flex items-center justify-between group transition-all duration-300"
             >
-              {val}
+              <div className="flex items-center gap-3">
+                 <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:bg-indigo-500/20 transition-colors">
+                     <Plus className="w-5 h-5" />
+                 </div>
+                 <div className="flex flex-col items-start">
+                     <span className="text-xl font-bold text-slate-200">{val}</span>
+                     <span className="text-xs font-bold text-slate-500 uppercase">{t('ml')}</span>
+                 </div>
+              </div>
+              <div className="text-slate-600 font-medium text-sm">
+                 {Math.round(val / 30)} {t('oz')}
+              </div>
             </button>
           ))}
         </div>

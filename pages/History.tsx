@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from 'react';
 import { getLogs } from '../services/storage';
 import { Log, LogType } from '../types';
 import { ScreenHeader, SegmentedControl } from '../components/UI';
 import { StatisticsView } from '../components/Charts';
-import { Baby, Droplets, Milk, Layers } from 'lucide-react';
+import { Baby, Droplets, Milk, Layers, Moon } from 'lucide-react';
 import { t } from '../services/localization';
 
 const History: React.FC = () => {
@@ -23,6 +24,7 @@ const History: React.FC = () => {
         case LogType.BOTTLE: return <Milk className={`${baseClass} text-pink-400`} />;
         case LogType.PUMP: return <Droplets className={`${baseClass} text-cyan-400`} />;
         case LogType.DIAPER: return <Layers className={`${baseClass} text-yellow-400`} />;
+        case LogType.SLEEP: return <Moon className={`${baseClass} text-purple-400`} />;
     }
   };
 
@@ -37,6 +39,10 @@ const History: React.FC = () => {
             return `${t('left_initial')}:${log.amount_ml_left || 0} / ${t('right_initial')}:${log.amount_ml_right || 0} • ${t('total_output')}: ${log.amount_ml}${t('ml')}`;
         case LogType.DIAPER:
             return log.sub_type === 'BOTH' ? t('both') : log.sub_type === 'WET' ? t('wet') : t('dirty');
+        case LogType.SLEEP:
+            const h = Math.floor((log.duration_seconds || 0) / 3600);
+            const min = Math.floor(((log.duration_seconds || 0) % 3600) / 60);
+            return `${h}h ${min}m`;
     }
   };
 
@@ -75,13 +81,14 @@ const History: React.FC = () => {
                             <div className={`p-3 rounded-2xl ${
                                 log.type === 'NURSING' ? 'bg-indigo-500/10' : 
                                 log.type === 'BOTTLE' ? 'bg-pink-500/10' : 
-                                log.type === 'DIAPER' ? 'bg-yellow-500/10' : 'bg-cyan-500/10'
+                                log.type === 'DIAPER' ? 'bg-yellow-500/10' : 
+                                log.type === 'SLEEP' ? 'bg-purple-500/10' : 'bg-cyan-500/10'
                             }`}>
                                 {getIcon(log.type)}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-center mb-0.5">
-                                    <span className="font-bold text-slate-200 capitalize text-base">{t(log.type === 'NURSING' ? 'nursing_title' : log.type === 'BOTTLE' ? 'bottle_title' : log.type === 'PUMP' ? 'pump_title' : 'diaper_title')}</span>
+                                    <span className="font-bold text-slate-200 capitalize text-base">{t(log.type === 'NURSING' ? 'nursing_title' : log.type === 'BOTTLE' ? 'bottle_title' : log.type === 'PUMP' ? 'pump_title' : log.type === 'SLEEP' ? 'sleep_title' : 'diaper_title')}</span>
                                     <span className="text-xs font-medium text-slate-500">{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' }).toLowerCase()}</span>
                                 </div>
                                 <div className="text-sm text-slate-400 font-medium truncate">

@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Baby, Droplets, Layers, ChevronRight, Activity, Bell, BellOff, X, AlertTriangle, ChevronLeft, Globe, Settings, Milk } from 'lucide-react';
+import { Clock, Baby, Droplets, Layers, ChevronRight, Activity, Bell, BellOff, X, AlertTriangle, ChevronLeft, Globe, Settings, Milk, Moon } from 'lucide-react';
 import { Card } from '../components/UI';
 import { getLogs, getReminderInterval, saveReminderInterval, getLanguage, saveLanguage } from '../services/storage';
 import { Log, LogType } from '../types';
@@ -10,14 +11,15 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const [lastLog, setLastLog] = useState<Log | null>(null);
   const [lastFeed, setLastFeed] = useState<Log | null>(null);
+  const [lastDiaper, setLastDiaper] = useState<Log | null>(null);
+  const [lastSleep, setLastSleep] = useState<Log | null>(null);
+  
   const [reminderHours, setReminderHours] = useState<number>(0);
   const [showSettings, setShowSettings] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [now, setNow] = useState(new Date());
   
-  // We use key forcing in App.tsx, so standard getLanguage is fine on initial render
   const currentLang = getLanguage(); 
-
   const lastNotificationTimeRef = useRef<number>(0);
   const rtl = isRTL();
 
@@ -30,8 +32,9 @@ const Home: React.FC = () => {
       setNow(new Date());
       if (logs.length > 0) {
         setLastLog(logs[0]);
-        const feed = logs.find(l => l.type === LogType.NURSING || l.type === LogType.BOTTLE);
-        setLastFeed(feed || null);
+        setLastFeed(logs.find(l => l.type === LogType.NURSING || l.type === LogType.BOTTLE) || null);
+        setLastDiaper(logs.find(l => l.type === LogType.DIAPER) || null);
+        setLastSleep(logs.find(l => l.type === LogType.SLEEP) || null);
       }
     };
 
@@ -76,22 +79,28 @@ const Home: React.FC = () => {
   const saveSettings = (hours: number) => {
     setReminderHours(hours);
     saveReminderInterval(hours);
-    // Don't close modal here, user might want to change language
     if (hours > 0 && permission === 'default') requestPermission();
   };
   
   const handleLanguageChange = (lang: 'en' | 'he') => {
     saveLanguage(lang);
-    // App.tsx handles re-rendering via event listener
   };
 
   const getTimeAgo = (dateStr: string) => {
     const diff = (now.getTime() - new Date(dateStr).getTime()) / 60000;
-    if (diff < 1) return 'Just now';
+    if (diff < 1) return 'Now';
     if (diff < 60) return `${Math.floor(diff)}m`;
     const hours = Math.floor(diff / 60);
     const mins = Math.floor(diff % 60);
     return `${hours}h ${mins}m`;
+  };
+
+  const getLastSleepTime = (log: Log) => {
+    // If we have duration, the event time is usually the start time.
+    // For "Last Sleep" dashboard, users care about when they woke up (end time).
+    if (!log.duration_seconds) return log.created_at;
+    const end = new Date(new Date(log.created_at).getTime() + log.duration_seconds * 1000);
+    return end.toISOString();
   };
 
   const getNextFeedTime = () => {
@@ -108,6 +117,7 @@ const Home: React.FC = () => {
       case LogType.BOTTLE: return `${t('bottle_title')} • ${log.amount_ml}${t('ml')}`;
       case LogType.PUMP: return `${t('pump_title')} • ${log.amount_ml}${t('ml')}`;
       case LogType.DIAPER: return `${t('diaper_title')} • ${log.sub_type === 'BOTH' ? t('both') : log.sub_type === 'WET' ? t('wet') : t('dirty')}`;
+      case LogType.SLEEP: return t('sleep_title');
       default: return 'Activity Logged';
     }
   };
@@ -118,11 +128,12 @@ const Home: React.FC = () => {
         case LogType.BOTTLE: return <Milk className="w-5 h-5 text-pink-400" />;
         case LogType.PUMP: return <Droplets className="w-5 h-5 text-cyan-400" />;
         case LogType.DIAPER: return <Layers className="w-5 h-5 text-yellow-400" />;
+        case LogType.SLEEP: return <Moon className="w-5 h-5 text-purple-400" />;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-full p-4 sm:p-6 space-y-4 sm:space-y-6">
+    <div className="flex flex-col min-h-full p-4 sm:p-6 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-end pt-2 px-1">
         <div>
@@ -140,97 +151,118 @@ const Home: React.FC = () => {
         </button>
       </div>
 
-      {/* Main Feed Tracker Status */}
-      <Card className={`relative overflow-hidden shadow-xl ${isOverdue ? 'bg-gradient-to-br from-red-900/20 to-slate-900 ring-1 ring-red-500/30' : 'bg-gradient-to-br from-indigo-900/20 to-slate-900 ring-1 ring-indigo-500/20'}`}>
-        <div className="relative z-10">
-             <div className="flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-widest mb-2">
-                <Clock className="w-3 h-3" />
-                {t('last_feed')}
-            </div>
-            {lastFeed ? (
-                <div>
-                    <div className="text-4xl sm:text-5xl font-extrabold text-slate-100 tracking-tight break-words">{getTimeAgo(lastFeed.created_at)}</div>
-                    <div className="text-slate-400 text-sm mt-1 font-medium flex items-center gap-2">
-                        {lastFeed.type === 'NURSING' ? <Baby className="w-4 h-4 text-indigo-400" /> : <Milk className="w-4 h-4 text-pink-400" />}
-                        {new Date(lastFeed.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                    </div>
-                </div>
-            ) : (
-                <div className="text-slate-400 py-4 font-medium">{t('no_logs')}</div>
-            )}
-
-            {reminderHours > 0 && nextFeed && (
-                <div className={`mt-4 pt-4 border-t ${isOverdue ? 'border-red-500/20' : 'border-indigo-500/10'} flex flex-wrap justify-between items-center gap-2`}>
-                    <div className="flex items-center gap-2">
-                        {isOverdue && <AlertTriangle className="w-5 h-5 text-red-400 animate-pulse shrink-0" />}
-                        <span className={`text-sm font-semibold whitespace-nowrap ${isOverdue ? 'text-red-300' : 'text-indigo-200'}`}>
-                            {isOverdue 
-                                ? `${t('overdue')} ${Math.floor((now.getTime() - nextFeed.getTime()) / 60000)}${t('min')}`
-                                : `${t('next')}: ${nextFeed.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
-                            }
-                        </span>
-                    </div>
-                    <span className="text-[10px] font-bold text-slate-500 bg-slate-950/50 px-2 py-1 rounded-lg border border-white/5 whitespace-nowrap">{t('goal')}: {reminderHours}H</span>
-                </div>
-            )}
+      {/* Dashboard Status Grid */}
+      <div className="grid grid-cols-3 gap-3">
+        {/* Last Feed */}
+        <div className={`p-4 rounded-3xl flex flex-col items-center justify-between aspect-[3/4] shadow-lg relative overflow-hidden ${
+             isOverdue 
+             ? 'bg-gradient-to-b from-red-900/40 to-slate-900 ring-1 ring-red-500/30' 
+             : 'bg-slate-900 ring-1 ring-white/5'
+        }`}>
+             <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mb-1">
+                 {lastFeed?.type === 'BOTTLE' ? <Milk className="w-5 h-5 text-pink-400" /> : <Baby className="w-5 h-5 text-indigo-400" />}
+             </div>
+             <div className="text-center">
+                 <div className="text-2xl font-bold text-slate-100 mb-0.5">{lastFeed ? getTimeAgo(lastFeed.created_at) : '--'}</div>
+                 <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('last_feed')}</div>
+             </div>
+             {/* Small overdue indicator dot */}
+             {isOverdue && <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>}
         </div>
-      </Card>
+
+        {/* Last Diaper */}
+        <div className="p-4 rounded-3xl flex flex-col items-center justify-between aspect-[3/4] bg-slate-900 ring-1 ring-white/5 shadow-lg">
+             <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mb-1">
+                 <Layers className="w-5 h-5 text-yellow-400" />
+             </div>
+             <div className="text-center">
+                 <div className="text-2xl font-bold text-slate-100 mb-0.5">{lastDiaper ? getTimeAgo(lastDiaper.created_at) : '--'}</div>
+                 <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('last_diaper')}</div>
+             </div>
+        </div>
+
+        {/* Last Sleep */}
+        <div className="p-4 rounded-3xl flex flex-col items-center justify-between aspect-[3/4] bg-slate-900 ring-1 ring-white/5 shadow-lg">
+             <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mb-1">
+                 <Moon className="w-5 h-5 text-purple-400" />
+             </div>
+             <div className="text-center">
+                 <div className="text-2xl font-bold text-slate-100 mb-0.5">{lastSleep ? getTimeAgo(getLastSleepTime(lastSleep)) : '--'}</div>
+                 <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{t('last_sleep')}</div>
+             </div>
+        </div>
+      </div>
 
       {/* Quick Actions Grid */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3">
             <button 
                 onClick={() => navigate('/nursing')}
-                className="group relative bg-slate-800 p-5 sm:p-6 rounded-3xl h-32 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
+                className="group relative bg-slate-800 p-5 rounded-3xl h-32 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-active:scale-90 transition-transform">
-                    <Baby className="w-6 h-6 sm:w-7 sm:h-7" />
+                <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-active:scale-90 transition-transform">
+                    <Baby className="w-6 h-6" />
                 </div>
                 <div className="text-start">
-                    <div className="font-bold text-slate-100 text-lg sm:text-xl">{t('nursing_title')}</div>
-                    <div className="text-indigo-300/60 text-xs sm:text-sm font-medium">{t('nursing_timer')}</div>
+                    <div className="font-bold text-slate-100 text-lg">{t('nursing_title')}</div>
+                    <div className="text-indigo-300/60 text-xs font-medium">{t('nursing_timer')}</div>
                 </div>
             </button>
 
             <button 
                 onClick={() => navigate('/bottle')}
-                className="group relative bg-slate-800 p-5 sm:p-6 rounded-3xl h-32 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
+                className="group relative bg-slate-800 p-5 rounded-3xl h-32 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-pink-500/20 flex items-center justify-center text-pink-400 group-active:scale-90 transition-transform">
-                    <Milk className="w-6 h-6 sm:w-7 sm:h-7" />
+                <div className="w-10 h-10 rounded-2xl bg-pink-500/20 flex items-center justify-center text-pink-400 group-active:scale-90 transition-transform">
+                    <Milk className="w-6 h-6" />
                 </div>
                 <div className="text-start">
-                    <div className="font-bold text-slate-100 text-lg sm:text-xl">{t('bottle_title')}</div>
-                    <div className="text-pink-300/60 text-xs sm:text-sm font-medium">{t('bottle_log')}</div>
+                    <div className="font-bold text-slate-100 text-lg">{t('bottle_title')}</div>
+                    <div className="text-pink-300/60 text-xs font-medium">{t('bottle_log')}</div>
+                </div>
+            </button>
+
+             {/* Sleep Button (Full Width) */}
+             <button 
+                onClick={() => navigate('/sleep')}
+                className="col-span-2 group bg-slate-800 p-5 rounded-3xl h-24 flex items-center gap-4 shadow-lg active:scale-95 transition-all relative overflow-hidden"
+            >
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
+                    <Moon className="w-6 h-6" />
+                </div>
+                <div className="flex-1 text-start">
+                     <div className="font-bold text-slate-100 text-base">{t('sleep_log')}</div>
+                     <div className="text-xs text-purple-300/60 font-medium">{t('sleep_title')}</div>
                 </div>
             </button>
 
             <button 
                 onClick={() => navigate('/diaper')}
-                className="group bg-slate-800 p-4 sm:p-5 rounded-3xl h-28 sm:h-32 flex flex-col justify-between shadow-lg active:scale-95 transition-all"
+                className="group bg-slate-800 p-5 rounded-3xl h-24 flex items-center gap-4 shadow-lg active:scale-95 transition-all"
             >
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400">
-                    <Layers className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400 shrink-0">
+                    <Layers className="w-6 h-6" />
                 </div>
-                <div className="font-bold text-slate-100 text-base sm:text-lg text-start">{t('diaper_title')}</div>
+                <div className="font-bold text-slate-100 text-base text-start">{t('diaper_title')}</div>
             </button>
 
              <button 
                 onClick={() => navigate('/pump')}
-                className="group bg-slate-800 p-4 sm:p-5 rounded-3xl h-28 sm:h-32 flex flex-col justify-between shadow-lg active:scale-95 transition-all"
+                className="group bg-slate-800 p-5 rounded-3xl h-24 flex items-center gap-4 shadow-lg active:scale-95 transition-all"
             >
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400">
-                    <Droplets className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+                    <Droplets className="w-6 h-6" />
                 </div>
-                <div className="font-bold text-slate-100 text-base sm:text-lg text-start">{t('pump_title')}</div>
+                <div className="font-bold text-slate-100 text-base text-start">{t('pump_title')}</div>
             </button>
       </div>
 
       {/* Recent Activity Section */}
       <div className="">
         <h3 className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-3 ms-1">{t('recent_activity')}</h3>
-        <div className="space-y-3 sm:space-y-4">
+        <div className="space-y-3">
             <div 
                 onClick={() => navigate('/ai')}
                 className="bg-gradient-to-r from-slate-800 to-slate-800/50 p-4 rounded-3xl flex items-center gap-4 active:bg-slate-800/80 transition-colors cursor-pointer ring-1 ring-white/5"
@@ -253,14 +285,16 @@ const Home: React.FC = () => {
                             <span className="font-semibold text-slate-200">{getLogSummary(lastLog)}</span>
                             <span className="text-xs text-slate-500 font-medium">{getTimeAgo(lastLog.created_at)}</span>
                         </div>
-                        <div className="text-xs text-slate-500 mt-1 capitalize font-medium">{t(lastLog.type === 'NURSING' ? 'nursing_title' : lastLog.type === 'BOTTLE' ? 'bottle_title' : lastLog.type === 'PUMP' ? 'pump_title' : 'diaper_title')}</div>
+                        <div className="text-xs text-slate-500 mt-1 capitalize font-medium">
+                            {lastLog.type === LogType.SLEEP ? t('sleep_title') : t(lastLog.type === 'NURSING' ? 'nursing_title' : lastLog.type === 'BOTTLE' ? 'bottle_title' : lastLog.type === 'PUMP' ? 'pump_title' : 'diaper_title')}
+                        </div>
                      </div>
                 </div>
             )}
         </div>
       </div>
 
-      {/* Settings Modal */}
+      {/* Settings Modal - Kept same logic, just showing snippet */}
       {showSettings && (
         <div className="fixed inset-0 z-[100] flex items-end justify-center">
             <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm animate-in fade-in" onClick={() => setShowSettings(false)} />
@@ -276,7 +310,6 @@ const Home: React.FC = () => {
                     </button>
                 </div>
                 
-                {/* Reminders Section */}
                 <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                      <Bell className="w-4 h-4" /> {t('reminders')}
                 </h3>
@@ -300,7 +333,6 @@ const Home: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Language Section */}
                 <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <Globe className="w-4 h-4" /> {t('language')}
                 </h3>
