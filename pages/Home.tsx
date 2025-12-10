@@ -122,7 +122,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full p-6 space-y-8">
+    <div className="flex flex-col min-h-full p-6 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-end pt-2">
         <div>
@@ -149,7 +149,7 @@ const Home: React.FC = () => {
             </div>
             {lastFeed ? (
                 <div>
-                    <div className="text-5xl font-extrabold text-slate-100 tracking-tight">{getTimeAgo(lastFeed.created_at)}</div>
+                    <div className="text-4xl sm:text-5xl font-extrabold text-slate-100 tracking-tight">{getTimeAgo(lastFeed.created_at)}</div>
                     <div className="text-slate-400 text-sm mt-1 font-medium flex items-center gap-2">
                         {lastFeed.type === 'NURSING' ? <Clock className="w-4 h-4 text-indigo-400" /> : <Baby className="w-4 h-4 text-pink-400" />}
                         {new Date(lastFeed.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
@@ -180,7 +180,7 @@ const Home: React.FC = () => {
       <div className="grid grid-cols-2 gap-4">
             <button 
                 onClick={() => navigate('/nursing')}
-                className="group relative bg-slate-800 p-6 rounded-3xl h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
+                className="group relative bg-slate-800 p-6 rounded-3xl h-36 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-active:scale-90 transition-transform">
@@ -194,7 +194,7 @@ const Home: React.FC = () => {
 
             <button 
                 onClick={() => navigate('/bottle')}
-                className="group relative bg-slate-800 p-6 rounded-3xl h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
+                className="group relative bg-slate-800 p-6 rounded-3xl h-36 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="w-12 h-12 rounded-2xl bg-pink-500/20 flex items-center justify-center text-pink-400 group-active:scale-90 transition-transform">
@@ -228,7 +228,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Recent Activity Section */}
-      <div className="flex-1">
+      <div className="">
         <h3 className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-4 ms-1">{t('recent_activity')}</h3>
         <div className="space-y-4">
             <div 

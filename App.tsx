@@ -77,7 +77,7 @@ const App: React.FC = () => {
       <div key={langKey} className="flex flex-col h-screen w-full bg-slate-950 text-slate-100 font-sans overflow-hidden">
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto pb-[100px] scroll-smooth no-scrollbar">
-          <div className="max-w-md mx-auto w-full h-full">
+          <div className="max-w-md mx-auto w-full min-h-full">
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/nursing" element={<Nursing />} />
