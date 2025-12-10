@@ -8,5 +8,5 @@ public class BabyLogRequest {
 
     private String message;
 
-    private List<LogEntry> logs; // רשימה של האובייקטים שהגדרנו למעלה
+    private List<LogEntry> logs;
 }

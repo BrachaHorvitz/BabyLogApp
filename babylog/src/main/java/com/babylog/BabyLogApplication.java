@@ -3,7 +3,7 @@ package com.babylog;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication // זו האנוטציה שעושה את כל הקסם של הסריקה
+@SpringBootApplication
 public class BabyLogApplication {
 
     public static void main(String[] args) {

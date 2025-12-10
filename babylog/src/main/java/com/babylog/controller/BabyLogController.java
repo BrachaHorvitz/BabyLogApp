@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/analyze")
-@RequiredArgsConstructor // יוצר בנאי (Constructor) עבור שדות שהם final
+@RequiredArgsConstructor
 public class BabyLogController {
 
-    private final BabyLogService babyLogService; // הזרקת ה-Service
+    private final BabyLogService babyLogService;
 
     @PostMapping
     public ResponseEntity<String> analyzeLog(@RequestBody BabyLogRequest request) {
-        String result = babyLogService.analyzeLog(request); // שימוש ב-Service
+        String result = babyLogService.analyzeLog(request);
         return ResponseEntity.ok(result);
     }
 }
