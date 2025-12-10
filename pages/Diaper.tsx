@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Droplets, CloudRain, Wind } from 'lucide-react'; 
 import { Button, ScreenHeader } from '../components/UI';
@@ -20,7 +19,7 @@ const Diaper: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full p-6 space-y-6">
+    <div className="flex flex-col min-h-full p-4 sm:p-6 space-y-6">
       <ScreenHeader title={t('diaper_title')} />
 
       <div className="flex flex-col gap-4 flex-1 justify-center">
@@ -29,8 +28,8 @@ const Diaper: React.FC = () => {
             className="group relative bg-slate-800 hover:bg-slate-800/80 active:scale-[0.98] transition-all h-28 rounded-3xl overflow-hidden shadow-lg border-s-4 border-blue-500"
         >
              <div className="absolute inset-0 bg-blue-500/5 group-hover:bg-blue-500/10 transition-colors" />
-             <div className="flex items-center px-8 h-full">
-                <div className="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 me-6">
+             <div className="flex items-center px-6 sm:px-8 h-full">
+                <div className="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 me-6 shrink-0">
                     <Droplets className="w-8 h-8" fill="currentColor" fillOpacity={0.2} />
                 </div>
                 <div className="flex flex-col items-start">
@@ -45,8 +44,8 @@ const Diaper: React.FC = () => {
             className="group relative bg-slate-800 hover:bg-slate-800/80 active:scale-[0.98] transition-all h-28 rounded-3xl overflow-hidden shadow-lg border-s-4 border-amber-600"
         >
              <div className="absolute inset-0 bg-amber-600/5 group-hover:bg-amber-600/10 transition-colors" />
-             <div className="flex items-center px-8 h-full">
-                <div className="w-14 h-14 rounded-2xl bg-amber-600/20 flex items-center justify-center text-amber-500 me-6">
+             <div className="flex items-center px-6 sm:px-8 h-full">
+                <div className="w-14 h-14 rounded-2xl bg-amber-600/20 flex items-center justify-center text-amber-500 me-6 shrink-0">
                     <Wind className="w-8 h-8" />
                 </div>
                 <div className="flex flex-col items-start">
@@ -61,8 +60,8 @@ const Diaper: React.FC = () => {
              className="group relative bg-slate-800 hover:bg-slate-800/80 active:scale-[0.98] transition-all h-28 rounded-3xl overflow-hidden shadow-lg border-s-4 border-orange-500"
         >
              <div className="absolute inset-0 bg-orange-500/5 group-hover:bg-orange-500/10 transition-colors" />
-             <div className="flex items-center px-8 h-full">
-                <div className="w-14 h-14 rounded-2xl bg-orange-500/20 flex items-center justify-center text-orange-400 me-6">
+             <div className="flex items-center px-6 sm:px-8 h-full">
+                <div className="w-14 h-14 rounded-2xl bg-orange-500/20 flex items-center justify-center text-orange-400 me-6 shrink-0">
                     <CloudRain className="w-8 h-8" />
                 </div>
                 <div className="flex flex-col items-start">

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button, ScreenHeader, Input } from '../components/UI';
 import { LogType } from '../types';
@@ -28,7 +27,7 @@ const Pumping: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full p-6 space-y-6">
+    <div className="flex flex-col min-h-full p-4 sm:p-6 space-y-6">
       <ScreenHeader title={t('pump_title')} />
 
       {/* Total Display */}

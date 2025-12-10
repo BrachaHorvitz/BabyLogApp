@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { getLogs } from '../services/storage';
 import { Log, LogType } from '../types';
@@ -42,7 +41,7 @@ const History: React.FC = () => {
   };
 
   return (
-    <div className="p-6 h-full flex flex-col">
+    <div className="p-4 sm:p-6 min-h-full flex flex-col">
       <ScreenHeader title={t('history_title')} />
       
       <div className="mb-6">

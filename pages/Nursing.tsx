@@ -64,7 +64,7 @@ const Nursing: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full p-6 space-y-6">
+    <div className="flex flex-col min-h-full p-4 sm:p-6 space-y-6">
       <ScreenHeader title={t('nursing_title')}>
         {lastSide && (
           <div className="flex flex-col items-end">
@@ -92,10 +92,10 @@ const Nursing: React.FC = () => {
       </div>
 
       {/* Big Toggle Pads */}
-      <div className="grid grid-cols-2 gap-4 flex-1 max-h-60">
+      <div className="grid grid-cols-2 gap-4 flex-1">
         <button 
           onClick={() => toggleSide('LEFT')}
-          className={`relative rounded-[32px] flex flex-col items-center justify-center gap-2 transition-all duration-300 ${
+          className={`relative rounded-[32px] p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 min-h-[200px] ${
             activeSide === 'LEFT' 
             ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-900/40 scale-[1.02]' 
             : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
@@ -109,7 +109,7 @@ const Nursing: React.FC = () => {
 
         <button 
           onClick={() => toggleSide('RIGHT')}
-          className={`relative rounded-[32px] flex flex-col items-center justify-center gap-2 transition-all duration-300 ${
+          className={`relative rounded-[32px] p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300 min-h-[200px] ${
             activeSide === 'RIGHT' 
             ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-900/40 scale-[1.02]' 
             : 'bg-slate-800 text-slate-400 hover:bg-slate-750'
@@ -122,7 +122,7 @@ const Nursing: React.FC = () => {
       </div>
 
       {/* Footer Controls */}
-      <div className="space-y-4 pt-4">
+      <div className="space-y-4 pt-4 mt-auto">
         <input 
           type="text" 
           placeholder={t('notes_placeholder')} 
