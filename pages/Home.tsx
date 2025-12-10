@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Baby, Droplets, FileText, ChevronRight, Activity, Bell, BellOff, X, AlertTriangle, ChevronLeft, Globe, Settings } from 'lucide-react';
+import { Clock, Baby, Droplets, Layers, ChevronRight, Activity, Bell, BellOff, X, AlertTriangle, ChevronLeft, Globe, Settings, Milk } from 'lucide-react';
 import { Card } from '../components/UI';
 import { getLogs, getReminderInterval, saveReminderInterval, getLanguage, saveLanguage } from '../services/storage';
 import { Log, LogType } from '../types';
@@ -114,17 +114,17 @@ const Home: React.FC = () => {
 
   const getLogIcon = (type: LogType) => {
     switch (type) {
-        case LogType.NURSING: return <Clock className="w-5 h-5 text-indigo-400" />;
-        case LogType.BOTTLE: return <Baby className="w-5 h-5 text-pink-400" />;
+        case LogType.NURSING: return <Baby className="w-5 h-5 text-indigo-400" />;
+        case LogType.BOTTLE: return <Milk className="w-5 h-5 text-pink-400" />;
         case LogType.PUMP: return <Droplets className="w-5 h-5 text-cyan-400" />;
-        case LogType.DIAPER: return <FileText className="w-5 h-5 text-yellow-400" />;
+        case LogType.DIAPER: return <Layers className="w-5 h-5 text-yellow-400" />;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-full p-6 space-y-6">
+    <div className="flex flex-col min-h-full p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-end pt-2">
+      <div className="flex justify-between items-end pt-2 px-1">
         <div>
           <h1 className="text-3xl font-extrabold text-slate-100 tracking-tight">{t('app_name')}</h1>
           <p className="text-slate-400 text-sm font-medium">
@@ -149,9 +149,9 @@ const Home: React.FC = () => {
             </div>
             {lastFeed ? (
                 <div>
-                    <div className="text-4xl sm:text-5xl font-extrabold text-slate-100 tracking-tight">{getTimeAgo(lastFeed.created_at)}</div>
+                    <div className="text-4xl sm:text-5xl font-extrabold text-slate-100 tracking-tight break-words">{getTimeAgo(lastFeed.created_at)}</div>
                     <div className="text-slate-400 text-sm mt-1 font-medium flex items-center gap-2">
-                        {lastFeed.type === 'NURSING' ? <Clock className="w-4 h-4 text-indigo-400" /> : <Baby className="w-4 h-4 text-pink-400" />}
+                        {lastFeed.type === 'NURSING' ? <Baby className="w-4 h-4 text-indigo-400" /> : <Milk className="w-4 h-4 text-pink-400" />}
                         {new Date(lastFeed.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </div>
                 </div>
@@ -160,77 +160,77 @@ const Home: React.FC = () => {
             )}
 
             {reminderHours > 0 && nextFeed && (
-                <div className={`mt-5 pt-4 border-t ${isOverdue ? 'border-red-500/20' : 'border-indigo-500/10'} flex justify-between items-center`}>
+                <div className={`mt-4 pt-4 border-t ${isOverdue ? 'border-red-500/20' : 'border-indigo-500/10'} flex flex-wrap justify-between items-center gap-2`}>
                     <div className="flex items-center gap-2">
-                        {isOverdue && <AlertTriangle className="w-5 h-5 text-red-400 animate-pulse" />}
-                        <span className={`text-sm font-semibold ${isOverdue ? 'text-red-300' : 'text-indigo-200'}`}>
+                        {isOverdue && <AlertTriangle className="w-5 h-5 text-red-400 animate-pulse shrink-0" />}
+                        <span className={`text-sm font-semibold whitespace-nowrap ${isOverdue ? 'text-red-300' : 'text-indigo-200'}`}>
                             {isOverdue 
                                 ? `${t('overdue')} ${Math.floor((now.getTime() - nextFeed.getTime()) / 60000)}${t('min')}`
                                 : `${t('next')}: ${nextFeed.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`
                             }
                         </span>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-500 bg-slate-950/50 px-2 py-1 rounded-lg border border-white/5">{t('goal')}: {reminderHours}H</span>
+                    <span className="text-[10px] font-bold text-slate-500 bg-slate-950/50 px-2 py-1 rounded-lg border border-white/5 whitespace-nowrap">{t('goal')}: {reminderHours}H</span>
                 </div>
             )}
         </div>
       </Card>
 
       {/* Quick Actions Grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <button 
                 onClick={() => navigate('/nursing')}
-                className="group relative bg-slate-800 p-6 rounded-3xl h-36 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
+                className="group relative bg-slate-800 p-5 sm:p-6 rounded-3xl h-32 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-active:scale-90 transition-transform">
-                    <Clock className="w-7 h-7" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-active:scale-90 transition-transform">
+                    <Baby className="w-6 h-6 sm:w-7 sm:h-7" />
                 </div>
                 <div className="text-start">
-                    <div className="font-bold text-slate-100 text-xl">{t('nursing_title')}</div>
-                    <div className="text-indigo-300/60 text-sm font-medium">{t('nursing_timer')}</div>
+                    <div className="font-bold text-slate-100 text-lg sm:text-xl">{t('nursing_title')}</div>
+                    <div className="text-indigo-300/60 text-xs sm:text-sm font-medium">{t('nursing_timer')}</div>
                 </div>
             </button>
 
             <button 
                 onClick={() => navigate('/bottle')}
-                className="group relative bg-slate-800 p-6 rounded-3xl h-36 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
+                className="group relative bg-slate-800 p-5 sm:p-6 rounded-3xl h-32 sm:h-40 flex flex-col justify-between overflow-hidden shadow-lg transition-all active:scale-95 active:shadow-none"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="w-12 h-12 rounded-2xl bg-pink-500/20 flex items-center justify-center text-pink-400 group-active:scale-90 transition-transform">
-                    <Baby className="w-7 h-7" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-pink-500/20 flex items-center justify-center text-pink-400 group-active:scale-90 transition-transform">
+                    <Milk className="w-6 h-6 sm:w-7 sm:h-7" />
                 </div>
                 <div className="text-start">
-                    <div className="font-bold text-slate-100 text-xl">{t('bottle_title')}</div>
-                    <div className="text-pink-300/60 text-sm font-medium">{t('bottle_log')}</div>
+                    <div className="font-bold text-slate-100 text-lg sm:text-xl">{t('bottle_title')}</div>
+                    <div className="text-pink-300/60 text-xs sm:text-sm font-medium">{t('bottle_log')}</div>
                 </div>
             </button>
 
             <button 
                 onClick={() => navigate('/diaper')}
-                className="group bg-slate-800 p-5 rounded-3xl h-32 flex flex-col justify-between shadow-lg active:scale-95 transition-all"
+                className="group bg-slate-800 p-4 sm:p-5 rounded-3xl h-28 sm:h-32 flex flex-col justify-between shadow-lg active:scale-95 transition-all"
             >
-                <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400">
-                    <FileText className="w-6 h-6" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-400">
+                    <Layers className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <div className="font-bold text-slate-100 text-lg text-start">{t('diaper_title')}</div>
+                <div className="font-bold text-slate-100 text-base sm:text-lg text-start">{t('diaper_title')}</div>
             </button>
 
              <button 
                 onClick={() => navigate('/pump')}
-                className="group bg-slate-800 p-5 rounded-3xl h-32 flex flex-col justify-between shadow-lg active:scale-95 transition-all"
+                className="group bg-slate-800 p-4 sm:p-5 rounded-3xl h-28 sm:h-32 flex flex-col justify-between shadow-lg active:scale-95 transition-all"
             >
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400">
-                    <Droplets className="w-6 h-6" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400">
+                    <Droplets className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <div className="font-bold text-slate-100 text-lg text-start">{t('pump_title')}</div>
+                <div className="font-bold text-slate-100 text-base sm:text-lg text-start">{t('pump_title')}</div>
             </button>
       </div>
 
       {/* Recent Activity Section */}
       <div className="">
-        <h3 className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-4 ms-1">{t('recent_activity')}</h3>
-        <div className="space-y-4">
+        <h3 className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-3 ms-1">{t('recent_activity')}</h3>
+        <div className="space-y-3 sm:space-y-4">
             <div 
                 onClick={() => navigate('/ai')}
                 className="bg-gradient-to-r from-slate-800 to-slate-800/50 p-4 rounded-3xl flex items-center gap-4 active:bg-slate-800/80 transition-colors cursor-pointer ring-1 ring-white/5"

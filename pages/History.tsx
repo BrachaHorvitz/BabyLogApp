@@ -3,7 +3,7 @@ import { getLogs } from '../services/storage';
 import { Log, LogType } from '../types';
 import { ScreenHeader, SegmentedControl } from '../components/UI';
 import { StatisticsView } from '../components/Charts';
-import { Baby, Droplets, Clock, FileText } from 'lucide-react';
+import { Baby, Droplets, Milk, Layers } from 'lucide-react';
 import { t } from '../services/localization';
 
 const History: React.FC = () => {
@@ -19,10 +19,10 @@ const History: React.FC = () => {
   const getIcon = (type: LogType) => {
     const baseClass = "w-5 h-5";
     switch (type) {
-        case LogType.NURSING: return <Clock className={`${baseClass} text-indigo-400`} />;
-        case LogType.BOTTLE: return <Baby className={`${baseClass} text-pink-400`} />;
+        case LogType.NURSING: return <Baby className={`${baseClass} text-indigo-400`} />;
+        case LogType.BOTTLE: return <Milk className={`${baseClass} text-pink-400`} />;
         case LogType.PUMP: return <Droplets className={`${baseClass} text-cyan-400`} />;
-        case LogType.DIAPER: return <FileText className={`${baseClass} text-yellow-400`} />;
+        case LogType.DIAPER: return <Layers className={`${baseClass} text-yellow-400`} />;
     }
   };
 

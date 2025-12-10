@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import { Clock, Milk, Droplets, Baby, FileText, Home as HomeIcon } from 'lucide-react';
+import { Milk, Baby, ClipboardList, Layers, Home as HomeIcon } from 'lucide-react';
 
 import Home from './pages/Home';
 import Nursing from './pages/Nursing';
@@ -17,10 +17,10 @@ const Navigation = () => {
     // We call t() here, so this component needs to re-render when language changes
     const navItems = [
         { path: '/', icon: HomeIcon, label: t('nav_home') },
-        { path: '/nursing', icon: Clock, label: t('nav_nursing') },
-        { path: '/bottle', icon: Baby, label: t('nav_bottle') },
-        { path: '/diaper', icon: FileText, label: t('nav_diaper') },
-        { path: '/history', icon: Milk, label: t('nav_history') },
+        { path: '/nursing', icon: Baby, label: t('nav_nursing') },
+        { path: '/bottle', icon: Milk, label: t('nav_bottle') },
+        { path: '/diaper', icon: Layers, label: t('nav_diaper') },
+        { path: '/history', icon: ClipboardList, label: t('nav_history') },
     ];
 
     return (
@@ -74,7 +74,7 @@ const App: React.FC = () => {
 
   return (
     <HashRouter>
-      <div key={langKey} className="flex flex-col h-screen w-full bg-slate-950 text-slate-100 font-sans overflow-hidden">
+      <div key={langKey} className="flex flex-col h-[100dvh] w-full bg-slate-950 text-slate-100 font-sans overflow-hidden">
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto pb-[100px] scroll-smooth no-scrollbar">
           <div className="max-w-md mx-auto w-full min-h-full">
