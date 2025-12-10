@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import { Milk, Baby, ClipboardList, Layers, Home as HomeIcon, Moon, Sparkles } from 'lucide-react';
+import { Milk, Baby, ClipboardList, Layers, Home as HomeIcon, Moon } from 'lucide-react';
 
 import Home from './pages/Home';
 import Nursing from './pages/Nursing';
@@ -10,16 +10,14 @@ import Pumping from './pages/Pumping';
 import Diaper from './pages/Diaper';
 import Sleep from './pages/Sleep';
 import History from './pages/History';
-import Assistant from './pages/Assistant';
 import { getDir, t } from './services/localization';
 
 const Navigation = () => {
     const location = useLocation();
     
-    // Simplified Navigation: Home, AI, History
+    // Simplified Navigation: Home, History
     const navItems = [
         { path: '/', icon: HomeIcon, label: t('nav_home') },
-        { path: '/ai', icon: Sparkles, label: t('nav_ai') },
         { path: '/history', icon: ClipboardList, label: t('nav_history') },
     ];
 
@@ -86,7 +84,6 @@ const App: React.FC = () => {
                 <Route path="/diaper" element={<Diaper />} />
                 <Route path="/sleep" element={<Sleep />} />
                 <Route path="/history" element={<History />} />
-                <Route path="/ai" element={<Assistant />} />
             </Routes>
           </div>
         </main>

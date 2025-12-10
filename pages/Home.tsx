@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Baby, Droplets, Layers, ChevronRight, Activity, Bell, BellOff, X, AlertTriangle, ChevronLeft, Globe, Settings, Milk, Moon } from 'lucide-react';
-import { Card } from '../components/UI';
+import { Clock, Baby, Droplets, Layers, Bell, X, Globe, Settings, Milk, Moon } from 'lucide-react';
 import { getLogs, getReminderInterval, saveReminderInterval, getLanguage, saveLanguage } from '../services/storage';
 import { Log, LogType } from '../types';
 import { t, isRTL } from '../services/localization';
@@ -263,17 +262,7 @@ const Home: React.FC = () => {
       <div className="">
         <h3 className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-3 ms-1">{t('recent_activity')}</h3>
         <div className="space-y-3">
-            <div 
-                onClick={() => navigate('/ai')}
-                className="bg-gradient-to-r from-slate-800 to-slate-800/50 p-4 rounded-3xl flex items-center gap-4 active:bg-slate-800/80 transition-colors cursor-pointer ring-1 ring-white/5"
-            >
-                <div className="bg-indigo-500 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20"><Activity className="w-5 h-5 text-white" /></div>
-                <div className="flex-1">
-                    <div className="font-bold text-slate-200">{t('ai_insights')}</div>
-                    <div className="text-xs text-slate-400 font-medium">{t('ai_desc')}</div>
-                </div>
-                {rtl ? <ChevronLeft className="w-5 h-5 text-slate-600" /> : <ChevronRight className="w-5 h-5 text-slate-600" />}
-            </div>
+            {/* AI Insights Button Removed */}
 
             {lastLog && (
                 <div className="bg-slate-900 p-4 rounded-3xl flex items-center gap-4 ring-1 ring-white/5">
@@ -291,10 +280,16 @@ const Home: React.FC = () => {
                      </div>
                 </div>
             )}
+            
+            {!lastLog && (
+                <div className="text-slate-500 text-center text-sm py-4 italic">
+                    {t('no_logs_yet')}
+                </div>
+            )}
         </div>
       </div>
 
-      {/* Settings Modal - Kept same logic, just showing snippet */}
+      {/* Settings Modal */}
       {showSettings && (
         <div className="fixed inset-0 z-[100] flex items-end justify-center">
             <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm animate-in fade-in" onClick={() => setShowSettings(false)} />
