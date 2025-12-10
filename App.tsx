@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import { Milk, Baby, ClipboardList, Layers, Home as HomeIcon, Moon } from 'lucide-react';
+import { Milk, Baby, ClipboardList, Layers, Home as HomeIcon, Moon, Sparkles } from 'lucide-react';
 
 import Home from './pages/Home';
 import Nursing from './pages/Nursing';
@@ -16,13 +16,10 @@ import { getDir, t } from './services/localization';
 const Navigation = () => {
     const location = useLocation();
     
-    // We call t() here, so this component needs to re-render when language changes
+    // Simplified Navigation: Home, AI, History
     const navItems = [
         { path: '/', icon: HomeIcon, label: t('nav_home') },
-        { path: '/nursing', icon: Baby, label: t('nav_nursing') },
-        { path: '/bottle', icon: Milk, label: t('nav_bottle') },
-        { path: '/diaper', icon: Layers, label: t('nav_diaper') },
-        { path: '/sleep', icon: Moon, label: t('sleep_title') },
+        { path: '/ai', icon: Sparkles, label: t('nav_ai') },
         { path: '/history', icon: ClipboardList, label: t('nav_history') },
     ];
 
@@ -31,19 +28,19 @@ const Navigation = () => {
             {/* Blur Background Layer */}
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl border-t border-white/5 mask-image-gradient pointer-events-auto"></div>
             
-            <div className="relative flex justify-around items-start pt-4 h-full px-1 pointer-events-auto">
+            <div className="relative flex justify-around items-start pt-4 h-full px-4 pointer-events-auto max-w-lg mx-auto">
                 {navItems.map(({ path, icon: Icon, label }) => {
                     const isActive = location.pathname === path;
                     return (
                         <NavLink 
                             key={path}
                             to={path}
-                            className={`flex flex-col items-center justify-center flex-1 min-w-0 space-y-1 group transition-all duration-300 ${isActive ? '-translate-y-1' : ''}`}
+                            className={`flex flex-col items-center justify-center flex-1 min-w-0 space-y-1.5 group transition-all duration-300 ${isActive ? '-translate-y-1' : ''}`}
                         >
-                            <div className={`p-1.5 rounded-2xl transition-all duration-300 ${isActive ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/25' : 'text-slate-500 group-active:text-slate-300'}`}>
+                            <div className={`p-2 rounded-2xl transition-all duration-300 ${isActive ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/25' : 'text-slate-500 group-active:text-slate-300'}`}>
                                 <Icon className={`w-6 h-6 ${isActive ? 'fill-current' : ''}`} strokeWidth={isActive ? 2.5 : 2} />
                             </div>
-                            <span className={`text-[10px] font-medium transition-colors w-full text-center truncate px-0.5 ${isActive ? 'text-indigo-200' : 'text-slate-600'}`}>{label}</span>
+                            <span className={`text-[11px] font-medium transition-colors w-full text-center truncate px-0.5 ${isActive ? 'text-indigo-200' : 'text-slate-600'}`}>{label}</span>
                         </NavLink>
                     );
                 })}

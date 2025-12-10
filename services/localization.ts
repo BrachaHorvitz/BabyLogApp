@@ -22,6 +22,7 @@ const dictionaries = {
     'nav_pump': 'Pump',
     'nav_diaper': 'Diaper',
     'nav_history': 'History',
+    'nav_ai': 'Assistant',
 
     // Home
     'last_feed': 'Feed',
@@ -126,6 +127,7 @@ const dictionaries = {
     'nav_pump': 'שאיבה',
     'nav_diaper': 'חיתול',
     'nav_history': 'היסטוריה',
+    'nav_ai': 'עוזר',
 
     // Home
     'last_feed': 'האכלה',
