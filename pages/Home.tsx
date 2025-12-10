@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Baby, Droplets, FileText, ChevronRight, Activity, Bell, BellOff, X, AlertTriangle, ChevronLeft, Globe } from 'lucide-react';
+import { Clock, Baby, Droplets, FileText, ChevronRight, Activity, Bell, BellOff, X, AlertTriangle, ChevronLeft, Globe, Settings } from 'lucide-react';
 import { Card } from '../components/UI';
 import { getLogs, getReminderInterval, saveReminderInterval, getLanguage, saveLanguage } from '../services/storage';
 import { Log, LogType } from '../types';
@@ -15,7 +14,9 @@ const Home: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [now, setNow] = useState(new Date());
-  const [currentLang, setCurrentLang] = useState(getLanguage());
+  
+  // We use key forcing in App.tsx, so standard getLanguage is fine on initial render
+  const currentLang = getLanguage(); 
 
   const lastNotificationTimeRef = useRef<number>(0);
   const rtl = isRTL();
@@ -81,8 +82,7 @@ const Home: React.FC = () => {
   
   const handleLanguageChange = (lang: 'en' | 'he') => {
     saveLanguage(lang);
-    setCurrentLang(lang);
-    window.location.reload(); // Reload to apply direction changes cleanly
+    // App.tsx handles re-rendering via event listener
   };
 
   const getTimeAgo = (dateStr: string) => {
@@ -133,9 +133,10 @@ const Home: React.FC = () => {
         </div>
         <button 
             onClick={() => setShowSettings(true)}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all active:scale-95 ${reminderHours > 0 ? 'bg-indigo-500/10 text-indigo-400 ring-1 ring-indigo-500/50' : 'bg-slate-800 text-slate-500'}`}
+            className="w-12 h-12 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center active:scale-95 transition-all hover:bg-slate-700 hover:text-slate-200"
+            aria-label={t('settings')}
         >
-            {reminderHours > 0 ? <Bell className="w-6 h-6" fill="currentColor" fillOpacity={0.2} /> : <BellOff className="w-6 h-6" />}
+            <Settings className="w-6 h-6" />
         </button>
       </div>
 
@@ -267,7 +268,7 @@ const Home: React.FC = () => {
                 <div className="w-12 h-1 bg-slate-700 rounded-full mx-auto mb-6 opacity-50" />
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-slate-100 flex items-center gap-3">
-                        <Bell className="w-6 h-6 text-indigo-400" />
+                        <Settings className="w-6 h-6 text-indigo-400" />
                         {t('settings')}
                     </h2>
                     <button onClick={() => setShowSettings(false)} className="p-2 bg-slate-800 rounded-full text-slate-400 hover:text-slate-200">
@@ -276,7 +277,9 @@ const Home: React.FC = () => {
                 </div>
                 
                 {/* Reminders Section */}
-                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3">{t('reminders')}</h3>
+                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                     <Bell className="w-4 h-4" /> {t('reminders')}
+                </h3>
                 <p className="text-slate-400 text-sm mb-4 leading-relaxed">
                     {t('reminders_desc')}
                 </p>

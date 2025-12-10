@@ -1,4 +1,3 @@
-
 import { getLanguage } from './storage';
 
 export type Lang = 'en' | 'he';
@@ -190,7 +189,8 @@ const dictionaries = {
 
 export const t = (key: string): string => {
   const lang = getLanguage() as Lang;
-  return dictionaries[lang]?.[key] || key;
+  const dict = dictionaries[lang] || dictionaries['en'];
+  return dict[key as keyof typeof dict] || key;
 };
 
 export const isRTL = (): boolean => getLanguage() === 'he';

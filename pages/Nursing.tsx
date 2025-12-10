@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, Pause, Play } from 'lucide-react';
 import { Button, ScreenHeader } from '../components/UI';
@@ -104,7 +103,8 @@ const Nursing: React.FC = () => {
         >
           <div className="text-4xl font-bold">{t('left_initial')}</div>
           <div className="font-mono text-lg opacity-80">{formatTime(leftSeconds)}</div>
-          {activeSide === 'LEFT' ? <Pause className="absolute top-4 right-4 rtl:right-auto rtl:left-4 w-5 h-5" /> : <Play className="absolute top-4 right-4 rtl:right-auto rtl:left-4 w-5 h-5 opacity-50" />}
+          {/* Changed 'right-4' to 'end-4' which automatically handles RTL flipping */}
+          {activeSide === 'LEFT' ? <Pause className="absolute top-4 end-4 w-5 h-5" /> : <Play className="absolute top-4 end-4 w-5 h-5 opacity-50" />}
         </button>
 
         <button 
@@ -117,7 +117,7 @@ const Nursing: React.FC = () => {
         >
           <div className="text-4xl font-bold">{t('right_initial')}</div>
           <div className="font-mono text-lg opacity-80">{formatTime(rightSeconds)}</div>
-          {activeSide === 'RIGHT' ? <Pause className="absolute top-4 right-4 rtl:right-auto rtl:left-4 w-5 h-5" /> : <Play className="absolute top-4 right-4 rtl:right-auto rtl:left-4 w-5 h-5 opacity-50" />}
+          {activeSide === 'RIGHT' ? <Pause className="absolute top-4 end-4 w-5 h-5" /> : <Play className="absolute top-4 end-4 w-5 h-5 opacity-50" />}
         </button>
       </div>
 

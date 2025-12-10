@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { Clock, Milk, Droplets, Baby, FileText, Home as HomeIcon } from 'lucide-react';
 
@@ -15,6 +14,7 @@ import { getDir, t } from './services/localization';
 const Navigation = () => {
     const location = useLocation();
     
+    // We call t() here, so this component needs to re-render when language changes
     const navItems = [
         { path: '/', icon: HomeIcon, label: t('nav_home') },
         { path: '/nursing', icon: Clock, label: t('nav_nursing') },
@@ -50,15 +50,31 @@ const Navigation = () => {
 };
 
 const App: React.FC = () => {
+  // Use state to force re-render when language changes
+  const [langKey, setLangKey] = useState(0);
+
   useEffect(() => {
-    // Apply direction to document body
-    document.documentElement.dir = getDir();
-    document.documentElement.lang = getDir() === 'rtl' ? 'he' : 'en';
+    const updateDirection = () => {
+        document.documentElement.dir = getDir();
+        document.documentElement.lang = getDir() === 'rtl' ? 'he' : 'en';
+    };
+
+    // Initial setup
+    updateDirection();
+
+    // Listen for language changes
+    const handleLangChange = () => {
+        updateDirection();
+        setLangKey(prev => prev + 1); // Trigger re-render
+    };
+
+    window.addEventListener('language-change', handleLangChange);
+    return () => window.removeEventListener('language-change', handleLangChange);
   }, []);
 
   return (
     <HashRouter>
-      <div className="flex flex-col h-screen w-full bg-slate-950 text-slate-100 font-sans overflow-hidden">
+      <div key={langKey} className="flex flex-col h-screen w-full bg-slate-950 text-slate-100 font-sans overflow-hidden">
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto pb-[100px] scroll-smooth no-scrollbar">
           <div className="max-w-md mx-auto w-full h-full">

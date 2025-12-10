@@ -1,11 +1,20 @@
-
 import { Log, LogType } from '../types';
 
 const STORAGE_KEY = 'babylog_data';
 const REMINDER_KEY = 'babylog_reminder_hours';
 const LANGUAGE_KEY = 'babylog_language';
 
-// Simulating Supabase interactions using LocalStorage for the demo
+// Polyfill for randomUUID if not available (e.g. non-secure context)
+const generateUUID = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 export const getLogs = (): Log[] => {
   const data = localStorage.getItem(STORAGE_KEY);
   return data ? JSON.parse(data) : [];
@@ -16,7 +25,7 @@ export const saveLog = (log: Omit<Log, 'id' | 'created_at'> & { created_at?: str
   const newLog: Log = {
     created_at: new Date().toISOString(), // Default fallback
     ...log,
-    id: crypto.randomUUID(),
+    id: generateUUID(),
   };
   // Prepend to list
   const updatedLogs = [newLog, ...logs].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
@@ -48,4 +57,6 @@ export const getLanguage = (): 'en' | 'he' => {
 
 export const saveLanguage = (lang: 'en' | 'he') => {
   localStorage.setItem(LANGUAGE_KEY, lang);
+  // Dispatch custom event to notify app of language change without reloading
+  window.dispatchEvent(new Event('language-change'));
 };
