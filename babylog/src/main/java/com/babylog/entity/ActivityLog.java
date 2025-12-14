@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LogEntry {
+public class ActivityLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
