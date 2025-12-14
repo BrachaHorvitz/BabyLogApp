@@ -4,15 +4,16 @@ import com.babylog.enums.LogSubType;
 import com.babylog.enums.LogType;
 import com.babylog.enums.Side;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LogEntry {
+public class ActivityLogResponse {
 
     private String id;
 
@@ -33,10 +34,4 @@ public class LogEntry {
     private LocalDateTime createdAt;
 
     private String notes;
-
-
-
-
-
-
 }
