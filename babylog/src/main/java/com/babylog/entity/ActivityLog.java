@@ -38,4 +38,12 @@ public class ActivityLog {
     private LocalDateTime createdAt;
 
     private String notes;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+
 }
